@@ -1,0 +1,13 @@
+.vagrant/
+*.log
+*.retry
+ansible/ansible.cfg
+ansible/inventory/production/group_vars/all/vault.yml
+!ansible/ansible.cfg.example
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

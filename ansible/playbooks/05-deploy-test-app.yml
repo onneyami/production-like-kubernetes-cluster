@@ -1,0 +1,48 @@
+---
+- name: Deploy test application (nginx)
+  hosts: control-plane
+  become: true
+  tasks:
+    - name: Create namespace
+      ansible.builtin.shell: kubectl create namespace test-app --dry-run=client -o yaml | kubectl apply -f -
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
+    - name: Deploy nginx
+      ansible.builtin.shell: |
+        kubectl create deployment nginx --image=nginx -n test-app --replicas=2 --dry-run=client -o yaml | kubectl apply -f -
+        kubectl expose deployment nginx --port=80 --target-port=80 -n test-app --dry-run=client -o yaml | kubectl apply -f -
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
+    - name: Install NGINX Ingress Controller
+      ansible.builtin.shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/baremetal/deploy.yaml
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
+    - name: Create Ingress for test app
+      ansible.builtin.shell: |
+        cat <<EOF | kubectl apply -f -
+        apiVersion: networking.k8s.io/v1
+        kind: Ingress
+        metadata:
+          name: nginx-ingress
+          namespace: test-app
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /
+        spec:
+          ingressClassName: nginx
+          rules:
+          - host: test.local
+            http:
+              paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: nginx
+                    port:
+                      number: 80
+        EOF
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf

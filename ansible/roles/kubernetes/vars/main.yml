@@ -1,0 +1,2 @@
+---
+kubernetes_apt_version: "{{ kubernetes_version }}.*"

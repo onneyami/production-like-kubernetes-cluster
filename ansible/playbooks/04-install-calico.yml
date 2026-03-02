@@ -1,0 +1,14 @@
+---
+- name: Install Calico network plugin
+  hosts: control-plane
+  become: true
+  tasks:
+    - name: Download Calico manifest
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/projectcalico/calico/v3.26/manifests/calico.yaml
+        dest: /tmp/calico.yaml
+
+    - name: Apply Calico manifest
+      ansible.builtin.shell: kubectl apply -f /tmp/calico.yaml
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
