@@ -21,7 +21,7 @@
       ansible.builtin.copy:
         src: /etc/kubernetes/admin.conf
         dest: /home/vagrant/.kube/config
-        remote_src: yes
+        remote_src: true
         owner: vagrant
         group: vagrant
         mode: '0600'
@@ -42,3 +42,4 @@
       ansible.builtin.shell: "{{ hostvars['control-plane']['join_command'] }}"
       args:
         creates: /etc/kubernetes/kubelet.conf
+        

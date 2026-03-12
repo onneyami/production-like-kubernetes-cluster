@@ -12,3 +12,4 @@
       ansible.builtin.shell: kubectl apply -f /tmp/calico.yaml
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
+        

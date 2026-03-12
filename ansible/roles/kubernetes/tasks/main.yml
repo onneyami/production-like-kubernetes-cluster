@@ -16,7 +16,7 @@
       - kubelet={{ kubernetes_apt_version }}
       - kubectl={{ kubernetes_apt_version }}
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Hold kubeadm, kubelet, kubectl packages
   ansible.builtin.dpkg_selections:
@@ -30,5 +30,6 @@
 - name: Enable and start kubelet
   ansible.builtin.systemd:
     name: kubelet
-    enabled: yes
+    enabled: true
     state: started
+    

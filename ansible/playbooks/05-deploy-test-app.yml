@@ -46,3 +46,4 @@
         EOF
       environment:
         KUBECONFIG: /etc/kubernetes/admin.conf
+        

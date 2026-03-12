@@ -26,7 +26,7 @@
     name: "{{ item.name }}"
     value: "{{ item.value }}"
     state: present
-    reload: yes
+    reload: true
   loop:
     - { name: net.bridge.bridge-nf-call-iptables, value: 1 }
     - { name: net.bridge.bridge-nf-call-ip6tables, value: 1 }
@@ -41,7 +41,7 @@
       - gnupg
       - lsb-release
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Add Docker GPG key
   ansible.builtin.apt_key:
@@ -57,7 +57,7 @@
   ansible.builtin.apt:
     name: containerd.io={{ containerd_version }}-1
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Create containerd configuration directory
   ansible.builtin.file:
@@ -80,5 +80,6 @@
   ansible.builtin.systemd:
     name: containerd
     state: restarted
-    enabled: yes
-    daemon_reload: yes
+    enabled: true
+    daemon_reload: true
+    
